@@ -3,8 +3,8 @@
 # Week 8 Assignment - Design Patterns 
 
 
-##Overview
-
+Overview
+-----------
 
 This week, we reviewed Design Patterns and learned how they can make your OOP programs more structured and more easily readable by fellow programmers. Last week’s assignment you designed a program to implement the game of Pig. This week, we will expand on that game by using a few patterns that we have learned, specifically the Proxy and Factory patterns.
 
