@@ -5,10 +5,11 @@
 Game of Pig
 """
 
-import random
-import adts
 import argparse
+import random
 from threading import Timer
+
+import adts
 
 
 class TimedGameProxy(object):
@@ -22,7 +23,7 @@ class TimedGameProxy(object):
         :arg: (List) - List of players
         :return: None
         """
-        
+
         self.pig = Game(players)
         self.time_up = Timer(60.0, self.pig.quit)
 
@@ -53,8 +54,7 @@ class Game(object):
             player = PlayerFactory(players[num] + str(num)).get_player()
             self.players.enqueue(player)
         self.current_player = self.players.dequeue()
-        self.current_player.turn = True
-        print 'Current player: {}'.format(self.current_player.name)
+        print '\nFirst player: {}'.format(self.current_player.name)
         self.die = Die()
 
     def next_player(self):
@@ -66,7 +66,7 @@ class Game(object):
         self.current_player.turn = False
         self.players.enqueue(self.current_player)
         self.current_player = self.players.dequeue()
-        print 'Next player is {}'.format(self.current_player.name)
+        print '\nNext player is {}'.format(self.current_player.name)
         self.current_player.turn = True
 
     def start_game(self):
@@ -74,7 +74,7 @@ class Game(object):
         Play the game
         :return: None
         """
-
+        self.current_player.turn = True
         ask_player = self.current_player.next_action()
         while ask_player and self.current_player.turn:
             if ask_player.upper()[0] == 'Q':
@@ -85,7 +85,7 @@ class Game(object):
                 self.play()
 
             elif ask_player.upper()[0] == 'H':
-                print '{} Holds. Score: {}'\
+                print '\n{} Holds. Score: {}' \
                     .format(self.current_player.name,
                             self.current_player.get_score())
                 self.next_player()
@@ -93,11 +93,11 @@ class Game(object):
             score = self.current_player.get_score()
 
             if score >= 100:
-                print '{} wins. Score: {}'.format(self.current_player.name, score)
+                print '\n{} wins. Score: {}'.format(self.current_player.name, score)
                 break
 
-            print 'Player: ', self.current_player.name
-            print 'Score: ', self.current_player.get_score()
+            print '\nPlayer: ', self.current_player.name
+            print '\nScore: ', self.current_player.get_score()
             ask_player = self.current_player.next_action()
             if not ask_player:
                 self.quit()
@@ -111,7 +111,7 @@ class Game(object):
         num = self.current_player.play(self.die)
         if num == 1:
             self.current_player.points = []
-            print '{} loses turn. Score set to {}' \
+            print '\n{} loses turn. Score set to {}' \
                 .format(self.current_player.name,
                         self.current_player.get_score())
             self.next_player()
@@ -128,7 +128,7 @@ class Game(object):
         self.players.enqueue(self.current_player)
         while self.players.size() > 0:
             player = self.players.dequeue()
-            print 'Player {}: {}'.format(player.name, player.score)
+            print '\nPlayer {}: {}'.format(player.name, player.score)
         self.current_player.turn = False
 
 
