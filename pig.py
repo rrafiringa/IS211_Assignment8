@@ -12,11 +12,26 @@ from threading import Timer
 
 
 class TimedGameProxy(object):
+    """
+    Timed game of Pig Proxy
+    """
+
     def __init__(self, players):
+        """
+        Constructor
+        :arg: (List) - List of players
+        :return: None
+        """
+        
         self.pig = Game(players)
         self.time_up = Timer(60.0, self.pig.quit)
 
     def start_game(self):
+        """
+        Start the timed game
+        :return: None
+        """
+
         self.time_up.start()
         self.pig.start_game()
 
@@ -32,6 +47,7 @@ class Game(object):
         :param players: (Int) - Number of players
         :return: None
         """
+
         self.players = adts.Queue()
         for num in xrange(len(players)):
             player = PlayerFactory(players[num] + str(num)).get_player()
@@ -46,6 +62,7 @@ class Game(object):
         Switch game to next player.
         :return: None
         """
+
         self.current_player.turn = False
         self.players.enqueue(self.current_player)
         self.current_player = self.players.dequeue()
@@ -86,6 +103,11 @@ class Game(object):
                 self.quit()
 
     def play(self):
+        """
+        Make player play
+        :return: None
+        """
+
         num = self.current_player.play(self.die)
         if num == 1:
             self.current_player.points = []
@@ -97,6 +119,11 @@ class Game(object):
             self.current_player.points.append(num)
 
     def quit(self):
+        """
+        Stop the game
+        :return: None
+        """
+
         print 'Quitting game...'
         self.players.enqueue(self.current_player)
         while self.players.size() > 0:
@@ -109,6 +136,7 @@ class Die(object):
     """
     Die class
     """
+
     faces = (1, 2, 3, 4, 5, 6)
 
     def roll(self):
@@ -116,6 +144,7 @@ class Die(object):
         Alea jacta est
         :return: (Int) - The die face
         """
+
         face = random.choice(self.faces)
         print 'Die face: {}'.format(face)
         return face
@@ -132,6 +161,7 @@ class Player(object):
         :param name: (String) Player identifier
         :return: (None)
         """
+
         self.name = name
         self.turn = False
         self.points = []
@@ -144,6 +174,7 @@ class Player(object):
         Take points and lose turn
         :return: (Int) - Player points
         """
+
         self.turn = False
 
     def play(self, die):
@@ -152,6 +183,7 @@ class Player(object):
         :param die: (Object) Die instance
         :return: (None)
         """
+
         if self.turn:
             print 'Rolling the die...'
             return die.roll()
@@ -161,10 +193,16 @@ class Player(object):
         Sum and return accumulated points
         :return: (Int) - Player's score
         """
+
         self.score = sum(self.points)
         return self.score
 
     def next_action(self):
+        """
+        Ask player what to do next
+        :return: (String) Player's answer
+        """
+
         ask = 'Roll (R) Hold (H) or Quit (Q)?[Q]'
         return raw_input(ask)
 
@@ -179,6 +217,7 @@ class ComputerPlayer(Player):
         Player.next_action() overload.
         :return: (String) - Return Hold or Roll
         """
+
         score = self.get_score()
         if score == 25 or (100 - score) < 25:
             return 'Hold'
@@ -190,13 +229,24 @@ class PlayerFactory(object):
     """
     Player factory
     """
+
     def __init__(self, player):
+        """
+        Factory constructor
+        :arg: (String) - Player name
+        """
+
         if player[0] == 'H':
             self.player = Player(player)
         elif player[0] == 'C':
             self.player = ComputerPlayer(player)
 
     def get_player(self):
+        """
+        Return player type
+        :return: (Object) Player or ComputerPlayer object
+        """
+
         return self.player
 
 
